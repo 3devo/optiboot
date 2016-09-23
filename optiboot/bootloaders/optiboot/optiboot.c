@@ -479,13 +479,35 @@ int main(void) {
    */
 #if !defined(__AVR_ATmega16__)
   ch = MCUSR;
-  MCUSR = 0;
 #else
   ch = MCUCSR;
-  MCUCSR = 0;
 #endif
-  if (ch & (_BV(WDRF) | _BV(BORF) | _BV(PORF)))
-      appStart(ch);
+
+// The bootloader should only run on external reset, so run the
+// application when EXTRF is not set. Also, when EXTRF and WDRF are both
+// set, the bootloader has run to completion and should not run again.
+// There is a tiny corner case here: If a watchdog reset executes from
+// the application, and directly after (before MCUSR is cleared below)
+// an external reset happens, the bootloader will not run, and WDRF will
+// not be reported to the application.
+if ((ch & (_BV(WDRF) | _BV(EXTRF))) != _BV(EXTRF)) {
+  // Clear MCUSR, to prevent the watchdog from keeping running. In the
+  // future, this clearing could perhaps be removed (leaving it to the
+  // application to clear it), but it is kept now for compatibility.
+  #if !defined(__AVR_ATmega16__)
+    MCUSR = 0;
+  #else
+    MCUCSR = 0;
+  #endif
+
+  // If a WDRF and EXTRF are both set, the WDRF was our fault, so do not
+  // report it to the application. Note that if EXTRF is set, WDRF is
+  // implied by the above if.
+  if (ch & _BV(EXTRF))
+    ch &= ~_BV(WDRF);
+
+  appStart(ch);
+}
 
 #if LED_START_FLASHES > 0
   // Set up Timer 1 for timeout counter
