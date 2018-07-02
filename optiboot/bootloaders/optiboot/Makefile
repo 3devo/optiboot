@@ -125,19 +125,14 @@ OBJ        = $(PROGRAM).o
 OPTIMIZE = -Os -fno-split-wide-types -mrelax
 
 DEFS       = 
-
-#
-# platforms support EEPROM and large bootloaders need the eeprom functions that
-# are defined in libc, even though we explicity remove it with -nostdlib because
-# of the space-savings.
-LIBS       =  -lc
+LIBS       = 
 
 CC         = $(GCCROOT)avr-gcc
 
 # Override is only needed by avr-lib build system.
 
 override CFLAGS        = -g -Wall $(OPTIMIZE) -mmcu=$(MCU_TARGET) -DF_CPU=$(AVR_FREQ) $(DEFS)
-override LDFLAGS       = $(LDSECTIONS) -Wl,--relax -nostartfiles -nostdlib
+override LDFLAGS       = $(LDSECTIONS) -Wl,--relax -nostartfiles
 #-Wl,--gc-sections
 
 OBJCOPY        = $(GCCROOT)avr-objcopy
