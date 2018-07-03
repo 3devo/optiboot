@@ -237,8 +237,20 @@
 #define OPTIBOOT_CUSTOMVER 0
 #endif
 
-unsigned const int __attribute__((section(".version"))) 
-optiboot_version = 256*(OPTIBOOT_MAJVER + OPTIBOOT_CUSTOMVER) + OPTIBOOT_MINVER;
+// Add custom hardware mayjor/minor versions to the ".version" section 
+// before the Optiboot software versions, since the bootloader 
+// section ends after the Optiboot version section.
+typedef struct {
+  unsigned const char compatible_devoboard_version;
+  unsigned const char current_devoboard_version;
+  unsigned const int optiboot_version;
+} Versions;
+
+Versions versions __attribute__((section(".version"))) = {
+  .compatible_devoboard_version = COMPATIBLE_DEVOBOARD_VERSION,
+  .current_devoboard_version = CURRENT_DEVOBOARD_VERSION,
+  .optiboot_version = 256*(OPTIBOOT_MAJVER + OPTIBOOT_CUSTOMVER) + OPTIBOOT_MINVER,
+};
 
 
 #include <inttypes.h>
@@ -559,9 +571,9 @@ if ((ch & (_BV(WDRF) | _BV(EXTRF))) != _BV(EXTRF)) {
        * Note that the references to memory are optimized away.
        */
       if (which == 0x82) {
-	  putch(optiboot_version & 0xFF);
+	  putch(versions.optiboot_version & 0xFF);
       } else if (which == 0x81) {
-	  putch(optiboot_version >> 8);
+	  putch(versions.optiboot_version >> 8);
       } else {
 	/*
 	 * GET PARAMETER returns a generic 0x03 reply for
