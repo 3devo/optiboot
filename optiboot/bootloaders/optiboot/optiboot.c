@@ -226,6 +226,12 @@
 
 #define OPTIBOOT_MAJVER 6
 #define OPTIBOOT_MINVER 2
+// Put the custom version in the upper 4 bits of the major version. As long
+// as this version is 0x1, the current_devoboard_version and
+// compatible_devoboard_version should be put into the flash as well. If that
+// ever changes (or the format of those versions changes), the custom version
+// should be incremented as well.
+#define OPTIBOOT_CUSTOMVER (0x1 << 4)
 
 /*
  * OPTIBOOT_CUSTOMVER should be defined (by the makefile) for custom edits
