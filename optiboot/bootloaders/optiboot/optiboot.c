@@ -576,11 +576,11 @@ if ((ch & (_BV(WDRF) | _BV(EXTRF))) != _BV(EXTRF)) {
        * Send optiboot version as "SW version"
        * Note that the references to memory are optimized away.
        */
-      if (which == 0x82) {
+      if (which == Parm_STK_SW_MINOR) {
 	  putch(versions.optiboot_version & 0xFF);
-      } else if (which == 0x81) {
+      } else if (which == Parm_STK_SW_MAJOR) {
 	  putch(versions.optiboot_version >> 8);
-      } else if (which == 0x80) {
+      } else if (which == Parm_STK_HW_VER) {
         putch(versions.current_devoboard_version);
       } else {
 	/*

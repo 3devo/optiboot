@@ -45,3 +45,10 @@
 
 /* AVR raw commands sent via STK_UNIVERSAL */
 #define AVR_OP_LOAD_EXT_ADDR  0x4d
+
+/* AVR parameter list sent via STK_GET_PARAMETER 
+ * Reference: AVR061 page 17
+ */
+#define Parm_STK_HW_VER 0x80
+#define Parm_STK_SW_MAJOR 0x81
+#define Parm_STK_SW_MINOR 0x82
