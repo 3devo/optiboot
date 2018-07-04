@@ -580,6 +580,8 @@ if ((ch & (_BV(WDRF) | _BV(EXTRF))) != _BV(EXTRF)) {
 	  putch(versions.optiboot_version & 0xFF);
       } else if (which == 0x81) {
 	  putch(versions.optiboot_version >> 8);
+      } else if (which == 0x80) {
+        putch(versions.current_devoboard_version);
       } else {
 	/*
 	 * GET PARAMETER returns a generic 0x03 reply for
