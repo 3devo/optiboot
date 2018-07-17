@@ -252,7 +252,7 @@ typedef struct {
   unsigned const int optiboot_version;
 } Versions;
 
-Versions versions __attribute__((section(".version"))) = {
+const Versions versions __attribute__((section(".version"))) = {
   .compatible_devoboard_version = COMPATIBLE_DEVOBOARD_VERSION,
   .current_devoboard_version = CURRENT_DEVOBOARD_VERSION,
   .optiboot_version = 256*(OPTIBOOT_MAJVER + OPTIBOOT_CUSTOMVER) + OPTIBOOT_MINVER,
